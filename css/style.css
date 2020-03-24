@@ -1,0 +1,164 @@
+* {
+  /* border: 1px solid red; */
+  box-sizing: border-box;
+  font: Helvetica, "Rubik", sans-serif;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.title {
+  width: 100%;
+  height: 10%;
+  font-size: 30px;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile {
+  width: 100%;
+  height: 10%;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+  width: 100%;
+  height: 70%;
+
+  /* margin: 2% 40%;
+  border: 2px soild blue; */
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  */
+}
+
+.content {
+  height: 80%;
+  margin: 0 20%;
+  /* background-color: grey; */
+  /* border: 2px solid blue; */
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  align-items: center;
+  border-radius: 2%;
+  box-shadow: 0px 0px 30px 10px grey;
+}
+
+.actoins,
+.info {
+  height: 15%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hanio {
+  height: 60%;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.source,
+.aux,
+.target {
+  height: 90%;
+  width: 90%;
+  margin: 2% 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid purple;
+  position: relative;
+}
+
+.vertical-bar {
+  /* top: 5%; */
+  width: 5%;
+  height: 80%;
+  z-index: 1;
+  /* position: absolute; */
+  border: 2px solid blue;
+  background-color: blue;
+}
+
+.stack {
+  height: 10%;
+
+  z-index: 2;
+  position: absolute;
+  font-size: 14px;
+  text-align: center;
+  background-color: yellow;
+  border: 1px solid black;
+  border-radius: 10%;
+}
+
+.stack1 {
+  width: 30%;
+  top: 25%;
+}
+
+.stack2 {
+  width: 35%;
+  top: 35%;
+}
+
+.stack3 {
+  width: 40%;
+  top: 45%;
+}
+
+.stack4 {
+  width: 45%;
+  top: 55%;
+}
+
+.stack5 {
+  width: 50%;
+  top: 65%;
+}
+
+.stack6 {
+  width: 55%;
+  top: 75%;
+}
+
+.stack7 {
+  width: 60%;
+  top: 85%;
+}
+
+.horizontal-bar {
+  /* top: 80%; */
+  width: 80%;
+  height: 5%;
+  border: 2px solid blue;
+  background-color: blue;
+}
+
+.tower-name {
+  /* margin: 0; */
+  height: 10%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
