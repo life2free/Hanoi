@@ -133,42 +133,6 @@ body {
   border-radius: 10%;
 }
 
-.disk1 {
-  width: 25%;
-  top: 65%;
-  /* position: absolute; */
-}
-
-.disk2 {
-  width: 30%;
-  top: 75%;
-}
-
-.disk3 {
-  width: 35%;
-  top: 85%;
-}
-
-/* .disk4 {
-  width: 40%;
-  top: 85%;
-} */
-
-/* .disk5 {
-  width: 50%;
-  top: 65%;
-}
-
-.disk6 {
-  width: 55%;
-  top: 75%;
-}
-
-.disk7 {
-  width: 60%;
-  top: 85%;
-} */
-
 .horizontal-bar {
   /* top: 80%; */
   width: 80%;

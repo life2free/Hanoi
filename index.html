@@ -8,18 +8,18 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
       src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
       integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
       crossorigin="anonymous"
-    ></script> -->
-    <link
+    ></script>
+    <!-- <link
       rel="stylesheet"
       href="https://apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"
     />
     <script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="https://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
     <title>Hanio</title>
   </head>
   <body>
@@ -39,7 +39,7 @@
               type="number"
               class="disknumbersetting"
               step="1"
-              min="1"
+              min="3"
               max="9"
               value="3"
             />
@@ -60,21 +60,14 @@
           <!-- actions -->
         </div>
         <div class="info">
-          <div>Time:</div>
-          <div>Moves:</div>
-          <div>Minimum Moves:</div>
+          <div>Time:<span class="time"></span></div>
+          <div>Moves:<span class="moves"></span></div>
+          <div>Minimum Moves: <span class="minimum-moves"></span></div>
         </div>
         <div class="hanio">
           <div class="tower source" id="0">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
-            <div id="1" class="disk disk1">1</div>
-            <div id="2" class="disk disk2">2</div>
-            <div id="3" class="disk disk3">3</div>
-            <!-- <div class="disk disk4">4</div> -->
-            <!-- <div class="disk disk5">5</div>
-            <div class="disk disk6">6</div>
-            <div class="disk disk7">7</div> -->
           </div>
           <div class="tower aux" id="1">
             <div class="vertical-bar"></div>

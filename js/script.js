@@ -98,22 +98,152 @@
 // disks.each(element => {
 //   console.log(disks[element]);
 // });
-let diskNumber = 3;
-// $(".spinner").spinner();
-const towerDisks = [[], [], []];
-$(function() {
-  $("#1").draggable({ revert: true });
-});
 
-$(".tower").droppable({
-  drop: function(event, ui) {
-    alert($(this).attr("id"));
-    let towerId = $(this).attr("id");
-    if (towerId == "1") {
-      alert("ok");
-      ui.draggable({ revert: "invalid" });
+// $(".spinner").spinner();
+
+// $(function() {
+//   $("#1").draggable({ revert: true });
+// });
+// $(".tower").droppable({
+//   drop: function(event, ui) {
+//     alert($(this).attr("id"));
+//     let towerId = $(this).attr("id");
+//     if (towerId == "1") {
+//       alert("ok");
+//       ui.draggable({ revert: "invalid" });
+//     }
+//     alert("dropped");
+//     //  ui.draggable({ revert: true });
+//   }
+// });
+
+const towerDisks = [[], [], []];
+const standbyDisks = [];
+const diskNumberSetting = $(".disknumbersetting");
+const horizontalBarHeightPercent = 5;
+const eachDiskHeightPercent = 10;
+const smallestDiskWidthPercent = 25;
+const diskWidthDiffPercent = 5;
+const sourceTower = $(".source");
+const sourceTowerEle = document.querySelector(".source");
+const timeEle = $(".time");
+const movesEle = $(".moves");
+const minimumMovesEle = $(".minimum-moves");
+const maxDiskNumber = 9;
+const minDiskNumber = 3;
+
+let diskNumber = 3;
+let sourceTowerHight = $(sourceTower).height();
+let sourceTowerWidth = $(sourceTower).width();
+
+function settingDiskNumber(e) {
+  let newDiskNumber = $(this).val();
+  if (newDiskNumber != diskNumber) {
+    //  console.log("change");
+    //  let disks = $(".disk");
+    //  console.log(disks);
+
+    let heightGapPercent = (newDiskNumber - diskNumber) * eachDiskHeightPercent;
+    if (newDiskNumber > diskNumber) {
+      for (let i = 1; i <= diskNumber; i++) {
+        let disk = towerDisks[0][i - 1];
+        let diskTop = $(disk).position().top;
+        let newTop = diskTop - (heightGapPercent / 100) * sourceTowerHight;
+        $(disk).css("top", newTop);
+      }
+      for (let i = 0; i < newDiskNumber - diskNumber; i++) {
+        let disk = standbyDisks.shift();
+        if (disk != null) {
+          let topPercent =
+            100 -
+            horizontalBarHeightPercent -
+            (newDiskNumber - diskNumber - i) * eachDiskHeightPercent;
+          let newTop = (topPercent / 100) * (sourceTowerHight + 1);
+          $(disk).css("top", newTop);
+          disk.style.display = "block";
+          sourceTowerEle.appendChild(disk);
+          towerDisks[0].push(disk);
+        }
+      }
+    } else {
+      let sourceDisks = towerDisks[0];
+      for (let i = sourceDisks.length - 1; i > newDiskNumber - 1; i--) {
+        let disk = sourceDisks.pop();
+        disk.style.display = "none";
+        standbyDisks.splice(0, 0, disk);
+      }
+
+      for (let i = 0; i < newDiskNumber; i++) {
+        let disk = sourceDisks[i];
+        let diskTop = $(disk).position().top;
+        let newTop = diskTop - (heightGapPercent / 100) * sourceTowerHight;
+        $(disk).css("top", newTop);
+      }
     }
-    alert("dropped");
-    //  ui.draggable({ revert: true });
+    diskNumber = newDiskNumber;
+    $(minimumMovesEle).text(Math.pow(2, diskNumber) - 1);
   }
-});
+}
+
+function generateDisk(id, number) {
+  let idInt = parseInt(id);
+  let numberInt = parseInt(number);
+  let disk = document.createElement("div");
+  disk.setAttribute("id", idInt);
+  disk.classList.add("disk");
+  disk.innerText = idInt;
+  let topPercent =
+    100 -
+    horizontalBarHeightPercent -
+    (numberInt + 1 - idInt) * eachDiskHeightPercent;
+  let newTop = (topPercent / 100) * (sourceTowerHight - 1);
+  let newWidth =
+    ((smallestDiskWidthPercent + diskWidthDiffPercent * (idInt - 1)) / 100) *
+    sourceTowerWidth;
+  $(disk).css("top", newTop);
+  $(disk).css("width", newWidth);
+  console.log(newTop);
+  console.log(newWidth);
+  sourceTowerEle.appendChild(disk);
+}
+
+function getDisk(diskList, diskId) {
+  for (let i = 0; i < diskList.length; i++) {
+    if ($(diskList[i]).prop("id") == diskId) {
+      return diskList[i];
+    }
+  }
+  return {};
+}
+
+function init() {
+  diskNumber = parseInt($(diskNumberSetting).val());
+  for (let i = 1; i <= maxDiskNumber; i++) {
+    let disk = document.createElement("div");
+    disk.setAttribute("id", i);
+    disk.classList.add("disk");
+    disk.innerText = i;
+
+    let newWidth =
+      ((smallestDiskWidthPercent + diskWidthDiffPercent * (i - 1)) / 100) *
+      sourceTowerWidth;
+    $(disk).css("width", newWidth);
+    if (i <= diskNumber) {
+      let topPercent =
+        100 -
+        horizontalBarHeightPercent -
+        (diskNumber + 1 - i) * eachDiskHeightPercent;
+      let newTop = (topPercent / 100) * (sourceTowerHight + 1);
+      $(disk).css("top", newTop);
+      sourceTowerEle.append(disk);
+      towerDisks[0].push(disk);
+    } else {
+      standbyDisks.push(disk);
+    }
+  }
+  $(minimumMovesEle).text(Math.pow(2, diskNumber) - 1);
+}
+
+diskNumberSetting.change(settingDiskNumber);
+
+$(init);
