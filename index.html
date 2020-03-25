@@ -8,7 +8,18 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+      integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+      crossorigin="anonymous"
+    ></script> -->
+    <link
+      rel="stylesheet"
+      href="https://apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"
+    />
+    <script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <title>Hanio</title>
   </head>
   <body>
@@ -19,25 +30,57 @@
     </p>
     <div class="main">
       <div class="content">
-        <div class="actoins">actions</div>
-        <div class="info">info</div>
+        <div class="actoins">
+          <!-- <input type="text" class="spinner" /> -->
+          <!-- <input id="vertical-spinner" class="ui-spinner-input" /> -->
+          <div class="disknumber">
+            Disk:
+            <input
+              type="number"
+              class="disknumbersetting"
+              step="1"
+              min="1"
+              max="9"
+              value="3"
+            />
+          </div>
+          <div class="buttons">
+            <button class="buttons" type="button">Restart</button>
+            <button class="buttons" type="button">Log</button>
+            <button class="buttons" type="button">Solvel</button>
+          </div>
+          <!-- <input
+            type="number"
+            step="1"
+            min="1"
+            max="9"
+            value="1"
+            class="disk-number"
+          /> -->
+          <!-- actions -->
+        </div>
+        <div class="info">
+          <div>Time:</div>
+          <div>Moves:</div>
+          <div>Minimum Moves:</div>
+        </div>
         <div class="hanio">
-          <div class="source">
+          <div class="tower source" id="0">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
-            <div id="1" class="stack stack1">1</div>
-            <div id="2" class="stack stack2">2</div>
-            <div id="3" class="stack stack3">3</div>
-            <div class="stack stack4">4</div>
-            <div class="stack stack5">5</div>
-            <div class="stack stack6">6</div>
-            <div class="stack stack7">7</div>
+            <div id="1" class="disk disk1">1</div>
+            <div id="2" class="disk disk2">2</div>
+            <div id="3" class="disk disk3">3</div>
+            <!-- <div class="disk disk4">4</div> -->
+            <!-- <div class="disk disk5">5</div>
+            <div class="disk disk6">6</div>
+            <div class="disk disk7">7</div> -->
           </div>
-          <div class="aux">
+          <div class="tower aux" id="1">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
-          <div class="target">
+          <div class="tower target" id="2">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
