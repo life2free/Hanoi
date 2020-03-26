@@ -8,6 +8,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/jquery-ui.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
       src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
@@ -68,15 +69,14 @@
           </div>
         </div>
         <div class="hanio">
-          <div class="tower source" id="0">
+          <div class="tower source" id="0" name="Source">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
-          <div class="tower aux" id="1">
-            <div class="vertical-bar"></div>
+          <div class="tower aux" id="1" name="Aux">
             <div class="horizontal-bar"></div>
           </div>
-          <div class="tower target" id="2">
+          <div class="tower target" id="2" name="Target">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
@@ -111,6 +111,12 @@
           <div>Aux</div>
           <div>Target</div>
         </div>
+      </div>
+    </div>
+    <div class="logs">
+      <div class="logs-content"></div>
+      <div class="logs-button">
+        <button class="logs-hide-button" type="button">hide</button>
       </div>
     </div>
     <script src="./js/script.js"></script>

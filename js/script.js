@@ -47,6 +47,10 @@ const startButton = document.querySelector(".start-button");
 const quitButton = document.querySelector(".quit-button");
 const logButton = document.querySelector(".log-button");
 const solveButton = document.querySelector(".solve-button");
+const logs = document.querySelector(".logs");
+const logsContent = document.querySelector(".logs-content");
+const logsHideButton = document.querySelector(".logs-hide-button");
+let logsInfos = [];
 
 let diskNumber = 3;
 let towerTopPercents = [];
@@ -115,6 +119,8 @@ function settingDiskNumber(e) {
 }
 
 function moveDisk(disk, oriTowerId, aimTowerId) {
+  // alert("begin move");
+  let oriTower = towers[oriTowerId];
   let aimTower = towers[aimTowerId];
 
   let oriTowerDisks = towerDisks[oriTowerId];
@@ -128,22 +134,46 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
     towerTopPercents[aimTowerId] - eachDiskHeightPercent;
   let newTop = (towerTopPercents[aimTowerId] / 100) * sourceTowerHight;
   disk.style.top = newTop + "px";
+  // if (isAuto) {
+  //   setTimeout(function() {
+  //     aimTower.appendChild(disk);
+  //   }, 20000);
+  // } else {
   aimTower.appendChild(disk);
+  // }
 
   oriTowerDisks.shift();
   towerDiskIds[oriTowerId].shift();
   aimTowerDisks.splice(0, 0, disk);
   towerDiskIds[aimTowerId].splice(0, 0, oriDiskId);
   moves++;
-  // $(movesEle).text(moves);
   movesEle.innerText = moves;
+  let logInfo =
+    "Disk " +
+    disk.id +
+    ": " +
+    oriTower.getAttribute("name") +
+    " -> " +
+    aimTower.getAttribute("name");
+  logsInfos.push(logInfo);
+  console.log(logInfo);
   if (towerDisks[2].length == diskNumber) {
     isFinish = true;
     finishGame();
+    logInfo =
+      "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
+    logsInfos.push(logInfo);
+    console.log(logInfo);
     setTimeout(function() {
       alert("Good job! You did it!");
     }, 300);
   }
+  // if (isAuto) {
+  //   console.log("begin sleep:" + new Date().getTime());
+  //   sleep(5000);
+  //   console.log("begin end:" + new Date().getTime());
+  // }
+  // console.log("begin move" + new Date().getTime());
 }
 
 function moveDishHandle() {
@@ -176,13 +206,18 @@ function moveDishHandle() {
 function startGame() {
   isFinish = false;
   isAuto = false;
+  logsInfos = [];
   moveButtons.forEach(button => (button.disabled = false));
   diskNumberSetting.disabled = true;
   quitButton.disabled = false;
   this.disabled = true;
   timeEle.innerText = "";
+  movesEle.innerText = "";
   startTime = new Date().getTime();
   interval = setInterval(showRunTime, 1000);
+  let logInfo = "Start the Game.";
+  logsInfos.push(logInfo);
+  console.log(logInfo);
 }
 
 function quitGame() {
@@ -191,13 +226,23 @@ function quitGame() {
   startButton.disabled = false;
   this.innerText = "Quit";
   this.disabled = true;
+  solveButton.disabled = false;
 
   moves = 0;
-  movesEle.innerText = "";
+  // movesEle.innerText = "";
   resetTowerDisks();
   clearInterval(interval);
   if (isAuto) {
     clearInterval(autoMoveInterval);
+  }
+  if (!isFinish) {
+    logInfo =
+      "Quit the Game! total steps:" +
+      moves +
+      ".  total times:" +
+      timeEle.innerText;
+    logsInfos.push(logInfo);
+    console.log(logInfo);
   }
 }
 
@@ -254,17 +299,85 @@ function resetTowerDisks() {
   }
 }
 
+function sleep(delay) {
+  var start = new Date().getTime();
+  while (new Date().getTime() - start < delay) {
+    continue;
+  }
+}
+
 function solveGame() {
-  alert("solveGame");
+  isFinish = false;
   isAuto = true;
+  moveButtons.forEach(button => (button.disabled = false));
+  diskNumberSetting.disabled = true;
+  quitButton.disabled = false;
+  this.disabled = true;
+  timeEle.innerText = "";
+  let logInfo = "Start the Game.";
+  logsInfos.push(logInfo);
+  console.log(logInfo);
+  startTime = new Date().getTime();
+  interval = setInterval(showRunTime, 1000);
   autoMoveHandle(diskNumber, 0, 2);
   // autoMoveInterval = setInterval(autoMoveHandle, 1000);
 }
 
 function autoMoveHandle(diskId, soureTowerId, targetTowerId) {
-  let sourceTowerDisks = move(diskNumber - 1, soureTowerId, targetTowerId);
-
-  let auxTowerId = getArrDifference([0, 1, 2], [soureTowerId, targetTowerId]);
+  // setTimeout(function() {}, 1000);
+  // console.log(
+  //   "diskId:" +
+  //     diskId +
+  //     " ; soureTowerId:" +
+  //     soureTowerId +
+  //     " ;targetTowerId:" +
+  //     targetTowerId
+  // );
+  let sourceTowerDiskIds = towerDiskIds[soureTowerId];
+  let diskIndex = sourceTowerDiskIds.indexOf(diskId);
+  console.log(diskIndex);
+  if (diskIndex != 0) {
+    let auxTowerId = getArrDifference(
+      [0, 1, 2],
+      [soureTowerId, targetTowerId]
+    )[0];
+    let nextDiskId = sourceTowerDiskIds[diskIndex - 1];
+    // setTimeout(function() {
+    autoMoveHandle(nextDiskId, soureTowerId, auxTowerId);
+    //move()
+    autoMoveHandle(diskId, soureTowerId, targetTowerId);
+    autoMoveHandle(nextDiskId, auxTowerId, targetTowerId);
+    // }, 1000);
+  } else {
+    let targetTowerDiskIds = towerDiskIds[targetTowerId];
+    if (targetTowerDiskIds.length > 0) {
+      let targetTowerTopDiskId = targetTowerDiskIds[0];
+      if (diskId > targetTowerTopDiskId) {
+        let auxTowerId = getArrDifference(
+          [0, 1, 2],
+          [soureTowerId, targetTowerId]
+        )[0];
+        // setTimeout(function() {
+        autoMoveHandle(targetTowerTopDiskId, targetTowerId, auxTowerId);
+        //move()
+        autoMoveHandle(diskId, soureTowerId, targetTowerId);
+        autoMoveHandle(targetTowerTopDiskId, auxTowerId, targetTowerId);
+        // }, 1000);
+      } else {
+        //move()
+        let oriDisk = towerDisks[soureTowerId][0];
+        // setTimeout(function() {
+        moveDisk(oriDisk, soureTowerId, targetTowerId);
+        // }, 1000);
+      }
+    } else {
+      // move()
+      let oriDisk = towerDisks[soureTowerId][0];
+      // setTimeout(function() {
+      moveDisk(oriDisk, soureTowerId, targetTowerId);
+      // }, 1000);
+    }
+  }
 }
 
 function getArrDifference(arr1, arr2) {
@@ -279,6 +392,10 @@ function finishGame() {
   startButton.disabled = true;
   quitButton.innerText = "Restart";
   quitButton.disabled = false;
+  clearInterval(interval);
+  if (isAuto) {
+    clearInterval(autoMoveInterval);
+  }
 }
 
 function showRunTime() {
@@ -303,8 +420,24 @@ function convertToShowTime(timeInterval) {
   if (H > 0) showTime += H + (H > 1 ? " hours " : " hour ");
   if (M > 0) showTime += M + (M > 1 ? " minutes " : " minute ");
   if (S > 0) showTime += S + (S > 1 ? " seconds " : " second ");
-  console.log(showTime);
+  // console.log(showTime);
   return showTime;
+}
+
+function showLogs() {
+  $(logs).effect("slide", {}, 500, function() {});
+  $(logsContent).empty();
+  if (logsInfos.length > 0) {
+    for (let i = 0; i < logsInfos.length; i++) {
+      let p = document.createElement("p");
+      p.innerText = logsInfos[i];
+      logsContent.appendChild(p);
+    }
+  }
+}
+
+function hideLogs() {
+  $(logs).effect("drop", {}, 500);
 }
 
 function init() {
@@ -352,7 +485,10 @@ function init() {
     button.addEventListener("click", moveDishHandle)
   );
   moveButtons.forEach(button => (button.disabled = true));
+  logButton.addEventListener("click", showLogs);
+  logsHideButton.addEventListener("click", hideLogs);
   quitButton.disabled = true;
+  logs.style.display = "none";
 }
 
 window.onload = init;
