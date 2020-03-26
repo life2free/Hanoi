@@ -58,8 +58,7 @@ body {
   box-shadow: 0px 0px 30px 10px grey;
 }
 
-.actoins,
-.info {
+.actoins {
   height: 15%;
   width: 80%;
   /* margin: 0 60%; */
@@ -68,40 +67,71 @@ body {
   align-items: center;
 }
 
+.info {
+  height: 15%;
+  width: 80%;
+  /* margin: 0 60%; */
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.info-time {
+  grid-row: 1;
+  grid-column: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.info-moves {
+  grid-row: 1;
+  grid-column: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-minimum-moves {
+  grid-row: 1;
+  grid-column: 3;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .disknumber {
-  width: 50%;
+  width: 40%;
+  font-size: 14px;
 }
 
 .buttons {
-  /* width: 50%; */
+  width: 10%;
+  font-size: 14px;
 }
 
-.disknumbersetting {
+/* .disknumbersetting {
   width: 15%;
   height: 40%;
   font-size: 16px;
   background-color: lightgray;
   border-radius: 10%;
-}
-
-.spinner {
-  /* width: 10px; */
-}
+} */
 
 .hanio {
   height: 60%;
   width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+  display: grid;
+  /* justify-content: space-evenly;
+  align-items: center; */
+  grid-template-rows: 9fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.source,
-.aux,
-.target {
-  height: 90%;
-  width: 90%;
-  margin: 2% 0;
+.tower {
+  height: 100%;
+  width: 100%;
+  margin-bottom: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -109,6 +139,36 @@ body {
   /* border: 1px solid purple; */
   position: relative;
   /* position: absolute; */
+}
+
+.source {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.aux {
+  grid-row: 1;
+  grid-column: 2;
+}
+
+.target {
+  grid-row: 1;
+  grid-column: 3;
+}
+
+.source-move-buttons {
+  grid-row: 2;
+  grid-column: 1;
+}
+
+.aux-move-buttons {
+  grid-row: 2;
+  grid-column: 2;
+}
+
+.target-move-buttons {
+  grid-row: 2;
+  grid-column: 3;
 }
 
 .vertical-bar {
@@ -141,9 +201,23 @@ body {
   background-color: blue;
 }
 
+.move-buttons {
+  height: 5%;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.move-button {
+  width: 20%;
+  font-size: 12px;
+  font-weight: bolder;
+}
+
 .tower-name {
   /* margin: 0; */
-  height: 10%;
+  height: 5%;
   width: 100%;
   display: flex;
   justify-content: space-around;

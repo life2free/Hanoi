@@ -35,34 +35,37 @@
           <!-- <input id="vertical-spinner" class="ui-spinner-input" /> -->
           <div class="disknumber">
             Disk:
-            <input
+            <select id="disknumbers">
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+            </select>
+            <!-- <input
               type="number"
               class="disknumbersetting"
               step="1"
               min="3"
               max="9"
               value="3"
-            />
+            /> -->
           </div>
-          <div class="buttons">
-            <button class="buttons" type="button">Restart</button>
-            <button class="buttons" type="button">Log</button>
-            <button class="buttons" type="button">Solvel</button>
-          </div>
-          <!-- <input
-            type="number"
-            step="1"
-            min="1"
-            max="9"
-            value="1"
-            class="disk-number"
-          /> -->
-          <!-- actions -->
+          <!-- <div class="buttons"> -->
+          <button class="buttons start-button" type="button">Start</button>
+          <button class="buttons quit-button" type="button">Quit</button>
+          <button class="buttons log-button" type="button">Log</button>
+          <button class="buttons solve-button" type="button">Solvel</button>
+          <!-- </div> -->
         </div>
         <div class="info">
-          <div>Time:<span class="time"></span></div>
-          <div>Moves:<span class="moves"></span></div>
-          <div>Minimum Moves: <span class="minimum-moves"></span></div>
+          <div class="info-time">Time: <span class="time"></span></div>
+          <div class="info-moves">Moves: <span class="moves"></span></div>
+          <div class="info-minimum-moves">
+            Minimum Moves: <span class="minimum-moves"></span>
+          </div>
         </div>
         <div class="hanio">
           <div class="tower source" id="0">
@@ -77,7 +80,32 @@
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
+          <div class="source-move-buttons move-buttons">
+            <button class="move-button" type="button" oriId="0" aimId="1">
+              >
+            </button>
+            <button class="move-button" type="button" oriId="0" aimId="2">
+              >>
+            </button>
+          </div>
+          <div class="aux-move-buttons move-buttons">
+            <button class="move-button" type="button" oriId="1" aimId="0">
+              <
+            </button>
+            <button class="move-button" type="button" oriId="1" aimId="2">
+              >
+            </button>
+          </div>
+          <div class="target-move-buttons move-buttons">
+            <button class="move-button" type="button" oriId="2" aimId="0">
+              <<
+            </button>
+            <button class="move-button" type="button" oriId="2" aimId="1">
+              <
+            </button>
+          </div>
         </div>
+
         <div class="tower-name">
           <div>Source</div>
           <div>Aux</div>
