@@ -78,13 +78,18 @@ the timeout value for solve. its unit is millisecond.
 const solveSpeeds = [500, 1000, 1500];
 
 /*
-percent value as base weight of final score which user will get. 
+percent value for disk 3,4...9
+  the value will as base weight of final score which user will get 
   user will get whole score of this part if finished the game
 */
 const baseWeights = [35, 40, 45, 50, 55, 60, 65];
+// time weight percent value for disk 3,4...9
 const timeWights = [40, 35, 30, 30, 25, 25, 20];
+// step weight percent value for disk 3,4...9
 const stepWights = [25, 25, 25, 20, 20, 15, 15];
+// the standare value of time which spend on moving each step
 const baseTimeEachSteps = [1, 1, 1, 1.5, 1.5, 2, 2];
+// the total score for disk 3,4...9
 const totalScores = [300, 400, 500, 600, 700, 800, 900];
 let logsInfos = [];
 let autoMoveSteps = [];
@@ -103,12 +108,20 @@ let solveSpeedOption = 1;
 let solveTimeOut = solveSpeeds[solveSpeedOption];
 let finalScore = 0;
 
+/**
+ * invoked when user choice the number of disks.
+ * when user choice different number, the number of disks stack on the source tower will change
+ * @param {Object} e
+ */
 function settingDiskNumber(e) {
   let newDiskNumber = parseInt(this.value);
   if (newDiskNumber != diskNumber) {
+    // if user choice different number with last time, then the number of disks stack on the source tower will change
     if (newDiskNumber > diskNumber) {
+      // if user choice more disks to move, need showing more disks on the source tower
       for (let i = 1; i <= diskNumber; i++) {
         let disk = towerDisks[0][i - 1];
+        // calculate the new top percent of the disk.
         let topPercent =
           100 -
           horizontalBarHeightPercent -
@@ -126,6 +139,7 @@ function settingDiskNumber(e) {
           let newTop = (topPercent / 100) * sourceTowerHight;
           disk.style.top = newTop + "px";
           disk.style.display = "block";
+          // append new disk to div, then thd disk will showed on the source tower
           sourceTower.appendChild(disk);
           towerDisks[0].push(disk);
           towerDiskIds[0].push(parseInt(diskNumber) + parseInt(i) + 1);
@@ -137,6 +151,7 @@ function settingDiskNumber(e) {
       for (let i = sourceDisks.length - 1; i > newDiskNumber - 1; i--) {
         let disk = sourceDisks.pop();
         towerDiskIds[0].pop();
+        // disappeared the disk which don't needed
         disk.style.display = "none";
         standbyDisks.splice(0, 0, disk);
         towerTopPercents[0] += eachDiskHeightPercent;
@@ -144,6 +159,7 @@ function settingDiskNumber(e) {
 
       for (let i = 0; i < newDiskNumber; i++) {
         let disk = sourceDisks[i];
+        // calculate the new top percent of the disk.
         let topPercent =
           100 -
           horizontalBarHeightPercent -
@@ -153,10 +169,17 @@ function settingDiskNumber(e) {
       }
     }
     diskNumber = newDiskNumber;
+    // display the new Minimum Moves
     minimumMovesEle.innerText = Math.pow(2, diskNumber) - 1;
   }
 }
 
+/**
+ * move the disk for the tower which its id is oriTowerId to the tower which its id is aimTowerId
+ * @param {Object} disk - thd disk will be moved
+ * @param {Number} oriTowerId - thd id of tower which thd disk will be moved from
+ * @param {Number} aimTowerId - the id of tower which thd disk will be moved to
+ */
 function moveDisk(disk, oriTowerId, aimTowerId) {
   let oriTower = towers[oriTowerId];
   let aimTower = towers[aimTowerId];
@@ -165,6 +188,7 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
   let oriDiskId = towerDiskIds[oriTowerId][0];
   let aimTowerDisks = towerDisks[aimTowerId];
 
+  // disappeared the disk on original tower
   disk.remove();
   towerTopPercents[oriTowerId] =
     towerTopPercents[oriTowerId] + eachDiskHeightPercent;
@@ -172,15 +196,18 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
     towerTopPercents[aimTowerId] - eachDiskHeightPercent;
   let newTop = (towerTopPercents[aimTowerId] / 100) * sourceTowerHight;
   disk.style.top = newTop + "px";
+  // append the disk to aim tower
   aimTower.appendChild(disk);
 
   oriTowerDisks.shift();
   towerDiskIds[oriTowerId].shift();
   aimTowerDisks.splice(0, 0, disk);
   towerDiskIds[aimTowerId].splice(0, 0, oriDiskId);
+
+  // add the number of step
   moves++;
   movesEle.innerText = moves;
-  // alert("1");
+  // generate the log
   let logInfo =
     "Disk " +
     disk.id +
@@ -195,6 +222,16 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
   }
 }
 
+/**
+ * invoked when user click the button to move disk
+ * 1. If there is no disk on the original tower to move, then give user a alert message
+ * 2. If there are disks on the original tower, then check the aim tower is empty or not
+ * 3. If the aim tower is empty, then move the disk to aim tower directly
+ * 3. If there are disks on aim tower, then check the top disk on aim tower
+ *    is bigger than the disk which will be moved or not
+ *    1) If the top disk on aim tower is bigger, then move the disk to aim tower directly
+ *    2) If the top disk on aim tower is smaller, then user can't move the disk to aim tower
+ */
 function moveDishHandle() {
   let oriTowerId = parseInt($(this).attr("oriId"));
   let aimTowerId = parseInt($(this).attr("aimId"));
@@ -204,13 +241,16 @@ function moveDishHandle() {
     let oriDisk = oriTowerDisks[0];
     let oriDiskId = towerDiskIds[oriTowerId][0];
     if (aimTowerDisks.length == 0) {
+      // the aim tower is empty, move the disk to aim tower directly
       moveDisk(oriDisk, oriTowerId, aimTowerId);
     } else {
       let aimTowerTopDiskId = towerDiskIds[aimTowerId][0];
       if (aimTowerTopDiskId != null && aimTowerTopDiskId != "") {
         if (oriDiskId < aimTowerTopDiskId) {
+          // the top disk on aim tower is bigger, move the disk to aim tower directly
           moveDisk(oriDisk, oriTowerId, aimTowerId);
         } else {
+          // the top disk on aim tower is smaller, user can't move the disk to aim tower, gives a alert message to user
           let oriTower = towers[oriTowerId];
           let aimTower = towers[aimTowerId];
           alert(
@@ -228,6 +268,9 @@ function moveDishHandle() {
   }
 }
 
+/**
+ * invoked when user click the "Start" button to play the game
+ */
 function startGame() {
   isFinish = false;
   isAuto = false;
@@ -247,6 +290,10 @@ function startGame() {
   console.log(logInfo);
 }
 
+/**
+ * for Solve method
+ * invoked when user click the "Solve!" button to play the game
+ */
 function solveGame() {
   autoMoveSteps = [];
   isFinish = false;
@@ -271,7 +318,10 @@ function solveGame() {
   console.log(logInfo);
   startTime = new Date().getTime();
   interval = setInterval(showRunTime, 1000);
+  // invoke the recursive function to get all of the steps
   hanoi(diskNumber, 0, 1, 2);
+
+  // delay performing each step to show the user how to move
   if (autoMoveSteps.length > 0) {
     for (let i = 0; i < autoMoveSteps.length; i++) {
       timeouts.push(
@@ -288,6 +338,13 @@ function solveGame() {
   }
 }
 
+/**
+ * recursive function, the core idea of hanio
+ * @param {Nuber} disc - the id of disk which will be moved
+ * @param {Number} src - the id of original tower
+ * @param {Number} aux - thd id of aux tower
+ * @param {Number} dst - the id of aim tower
+ */
 function hanoi(disc, src, aux, dst) {
   if (disc > 0) {
     hanoi(disc - 1, src, dst, aux);
@@ -296,6 +353,9 @@ function hanoi(disc, src, aux, dst) {
   }
 }
 
+/**
+ * handle the logic when user quit the game by clicking "Quit" button
+ */
 function quitGame() {
   moveButtons.forEach(button => (button.disabled = true));
   diskNumberSetting.disabled = false;
@@ -306,9 +366,11 @@ function quitGame() {
   solveSpeedEle.disabled = false;
 
   clearInterval(interval);
+  // move all disks to source tower
   resetTowerDisks();
 
   if (isAuto) {
+    // clear all the timeout event
     for (let i = 0; i < timeouts.length; i++) {
       clearTimeout(timeouts[i]);
     }
@@ -330,6 +392,9 @@ function quitGame() {
   moves = 0;
 }
 
+/**
+ * handle the logic when user finish the game
+ */
 function finishGame() {
   isFinish = true;
   moveButtons.forEach(button => (button.disabled = true));
@@ -344,6 +409,7 @@ function finishGame() {
   if (isAuto) {
     timeouts = [];
   } else {
+    // calculate the score for user
     calculateScore(moves);
     logInfo += ". Score:" + finalScore;
   }
@@ -356,11 +422,15 @@ function finishGame() {
   }, 1500);
 }
 
+/**
+ * move all disks to source tower when user quit the game or restart the game
+ */
 function resetTowerDisks() {
   if (!isFinish) {
     if (towerDisks[0].length < diskNumber) {
       for (let i = 0; i < towerDisks.length; i++) {
         for (let j = 0; j < towerDisks[i].length; j++) {
+          // remove all disks from all of towers
           towerDisks[i][j].remove();
         }
         towerDisks[i] = [];
@@ -368,24 +438,28 @@ function resetTowerDisks() {
         towerTopPercents[i] = 100 - horizontalBarHeightPercent;
       }
 
+      // generate the new disks and append to source tower
       for (let i = 1; i <= diskNumber; i++) {
         let disk = document.createElement("div");
         disk.setAttribute("id", i);
         disk.classList.add("disk");
         disk.innerText = i;
 
+        // calculate the width of disk
         let newWidth =
           ((smallestDiskWidthPercent +
             diskWidthDiffPercent * (parseInt(i) - 1)) /
             100) *
           sourceTowerWidth;
         disk.style.width = newWidth + "px";
+        // calculate the top of disk
         let topPercent =
           100 -
           horizontalBarHeightPercent -
           (parseInt(diskNumber) + 1 - parseInt(i)) * eachDiskHeightPercent;
         let newTop = (topPercent / 100) * sourceTowerHight;
         disk.style.top = newTop + "px";
+        // append the disk to div
         sourceTower.appendChild(disk);
         towerDisks[0].push(disk);
         towerDiskIds[0].push(i);
@@ -395,6 +469,8 @@ function resetTowerDisks() {
         100 - horizontalBarHeightPercent - diskNumber * eachDiskHeightPercent;
     }
   } else {
+    // if user has finished the game and want to restart game,
+    // then move all of the disks from target tower to source tower
     towerDiskIds[0] = [...towerDiskIds[2]];
     towerDiskIds[2] = [];
     towerTopPercents[2] = 100 - horizontalBarHeightPercent;
@@ -409,34 +485,41 @@ function resetTowerDisks() {
   }
 }
 
+/**
+ * calculate the score for user
+ * @param {Number} stepNumber - the steps which user move disk
+ */
 function calculateScore(stepNumber) {
-  console.log("score");
   let baseWeight = baseWeights[diskNumber - minDiskNumber];
   let timeWight = timeWights[diskNumber - minDiskNumber];
   let stepWight = stepWights[diskNumber - minDiskNumber];
   let baseTimeEachStep = baseTimeEachSteps[diskNumber - minDiskNumber];
   let totalScore = totalScores[diskNumber - minDiskNumber];
+  // because the user finish the game, so the user get whole score of the base part
   finalScore = (totalScore * baseWeight) / 100;
+  // calculate the time part score
   let timeEachStep = spendTime / stepNumber;
   let timeRatio = timeEachStep / baseTimeEachStep - 1;
   if (timeRatio > 0) {
-    let timeScore =
-      (totalScore * timeWight * Math.pow(0.8, Math.round(timeRatio / 0.5))) /
-      100;
+    let timeScore = (totalScore * timeWight * Math.pow(0.8, timeRatio)) / 100;
     finalScore += timeScore;
   } else {
     finalScore += (totalScore * timeWight) / 100;
   }
 
+  // calculate the step part score
   let mininumStep = Math.pow(2, diskNumber) - 1;
   let stepRatio = stepNumber / mininumStep - 1;
-  let stepScore =
-    (totalScore * stepWight * Math.pow(0.8, Math.round(stepRatio / 0.5))) / 100;
+  let stepScore = (totalScore * stepWight * Math.pow(0.8, stepRatio)) / 100;
   finalScore += stepScore;
   finalScore = Math.round(finalScore);
   scoreEle.innerText = finalScore;
 }
 
+/**
+ * calculate how long did the user play on current round
+ * invoked in each second
+ */
 function showRunTime() {
   let now = new Date().getTime();
   let runTime = now - startTime;
@@ -444,6 +527,11 @@ function showRunTime() {
   timeEle.innerText = convertToShowTime(runTime);
 }
 
+/**
+ * convert the format of the time interval to string which will be showed on page
+ * @param {Number} timeInterval
+ * @returns {String} - the format string for time, e.g: x minutes x seconds
+ */
 function convertToShowTime(timeInterval) {
   let showTime = "";
   let millisecondsInOneDay = 24 * 60 * 60 * 1000;
@@ -462,6 +550,10 @@ function convertToShowTime(timeInterval) {
   return showTime;
 }
 
+/**
+ * invoked when user click the "Log" button, show the logs to user
+ * @param {Object} e - refer to the click event
+ */
 function showLogs(e) {
   let showorhide = e.target.dataset.showorhide;
   showorhide = showorhide == "" ? 0 : parseInt(showorhide);
@@ -469,59 +561,73 @@ function showLogs(e) {
     $(logs).effect("slide", {}, 500, function() {});
     $(logsContent).empty();
     if (logsInfos.length > 0) {
+      // generate the p element for each log message
       for (let i = 0; i < logsInfos.length; i++) {
         let p = document.createElement("p");
         p.innerText = logsInfos[i];
+        // append the p element to log div
         logsContent.appendChild(p);
       }
     }
     e.target.dataset.showorhide = 0;
   } else {
+    // hide the log div
     $(logs).effect("drop", {}, 500);
     e.target.dataset.showorhide = 1;
   }
 }
 
+/**
+ * hide the log div
+ */
 function hideLogs() {
+  // hide the log div
   $(logs).effect("drop", {}, 500);
   logButton.dataset.showorhide = 1;
 }
 
+/**
+ * show the instructions
+ */
 function showInstruction() {
   $(".instruction-detail").slideToggle("slow");
 }
 
-function showSolveSpeed() {
-  $(".solve-speed-option").slideToggle("slow");
-}
-
+/**
+ * initialization when page load
+ */
 function init() {
   diskNumber = parseInt(diskNumberSetting.value);
   let initTopPercents = 100 - horizontalBarHeightPercent;
   towerTopPercents = [initTopPercents, initTopPercents, initTopPercents];
   for (let i = 1; i <= maxDiskNumber; i++) {
+    // generate the disks and append to source tower div
     let disk = document.createElement("div");
     disk.setAttribute("id", i);
     disk.classList.add("disk");
     disk.innerText = i;
 
+    // calculate the width of disk
     let newWidth =
       ((smallestDiskWidthPercent + diskWidthDiffPercent * (i - 1)) / 100) *
       sourceTowerWidth;
 
     disk.style.width = newWidth + "px";
     if (i <= diskNumber) {
+      // calculate the top of the disk
       let topPercent =
         100 -
         horizontalBarHeightPercent -
         (diskNumber + 1 - i) * eachDiskHeightPercent;
       let newTop = (topPercent / 100) * sourceTowerHight;
       disk.style.top = newTop + "px";
+      // append to source tower div
       sourceTower.appendChild(disk);
       towerDisks[0].push(disk);
       towerDiskIds[0].push(i);
       towerTopPercents[0] -= eachDiskHeightPercent;
     } else {
+      // store the disks which are dont't need to standby array in case for next round
       standbyDisks.push(disk);
     }
   }
