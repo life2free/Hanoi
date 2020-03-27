@@ -52,6 +52,7 @@ const solveButton = document.querySelector(".solve-button");
 const logs = document.querySelector(".logs");
 const logsContent = document.querySelector(".logs-content");
 const logsHideButton = document.querySelector(".logs-hide-button");
+const instruction = document.querySelector(".instruction");
 const solveSpeeds = [500, 1000, 1500];
 const baseWeights = [35, 40, 45, 50, 55, 60, 65];
 const timeWights = [40, 35, 30, 30, 25, 25, 20];
@@ -292,9 +293,9 @@ function quitGame() {
       finalScore = 0;
     }
     logInfo =
-      "Quit the Game! total steps:" +
+      "Quit the Game! Total steps:" +
       moves +
-      ".  total times:" +
+      ".  Total times:" +
       timeEle.innerText;
     logsInfos.push(logInfo);
     console.log(logInfo);
@@ -312,7 +313,7 @@ function finishGame() {
   solveSpeedEle.disabled = false;
   clearInterval(interval);
   let logInfo =
-    "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
+    "Success! Total steps:" + moves + ".  Total times:" + timeEle.innerText;
   if (isAuto) {
     timeouts = [];
   } else {
@@ -460,7 +461,6 @@ function hideLogs() {
 }
 
 function showInstruction() {
-  // $(".instruction-detail").effect("slide", {}, 500, function() {});
   $(".instruction-detail").slideToggle("slow");
 }
 
@@ -515,9 +515,7 @@ function init() {
   moveButtons.forEach(button => (button.disabled = true));
   logButton.addEventListener("click", showLogs);
   logsHideButton.addEventListener("click", hideLogs);
-  document
-    .querySelector(".instruction")
-    .addEventListener("click", showInstruction);
+  instruction.addEventListener("click", showInstruction);
   quitButton.disabled = true;
   logs.style.display = "none";
 }

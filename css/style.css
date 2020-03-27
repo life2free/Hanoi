@@ -116,6 +116,7 @@ body {
   height: 10%;
   width: 80%;
   /* margin: 0 60%; */
+  font-size: 16px;
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -155,7 +156,7 @@ body {
 
 .disknumber {
   width: 40%;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .buttons {
@@ -290,6 +291,7 @@ body {
 .logs {
   width: 30%;
   height: 40%;
+  top: 35%;
   padding: 0.4em;
   position: absolute;
   display: none;
