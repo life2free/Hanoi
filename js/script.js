@@ -68,6 +68,7 @@ const logs = document.querySelector(".logs");
 const logsContent = document.querySelector(".logs-content");
 const logsHideButton = document.querySelector(".logs-hide-button");
 const instruction = document.querySelector(".instruction");
+const instructionDetail = document.querySelector(".instruction-detail");
 
 /*
 the timeout value for solve. its unit is millisecond. 
@@ -594,6 +595,13 @@ function showInstruction() {
 }
 
 /**
+ * hide the instructions
+ */
+function hideInstruction() {
+  $(this).slideToggle("slow");
+}
+
+/**
  * initialization when page load
  */
 function init() {
@@ -649,6 +657,7 @@ function init() {
   logButton.addEventListener("click", showLogs);
   logsHideButton.addEventListener("click", hideLogs);
   instruction.addEventListener("click", showInstruction);
+  instructionDetail.addEventListener("click", hideInstruction);
   quitButton.disabled = true;
   logs.style.display = "none";
 }
