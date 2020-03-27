@@ -8,7 +8,6 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <link rel="stylesheet" type="text/css" href="./css/jquery-ui.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
       src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
@@ -32,8 +31,6 @@
     <div class="main">
       <div class="content">
         <div class="actoins">
-          <!-- <input type="text" class="spinner" /> -->
-          <!-- <input id="vertical-spinner" class="ui-spinner-input" /> -->
           <div class="disknumber">
             Disk:
             <select id="disknumbers">
@@ -45,21 +42,18 @@
               <option value="8">8</option>
               <option value="9">9</option>
             </select>
-            <!-- <input
-              type="number"
-              class="disknumbersetting"
-              step="1"
-              min="3"
-              max="9"
-              value="3"
-            /> -->
           </div>
-          <!-- <div class="buttons"> -->
           <button class="buttons start-button" type="button">Start</button>
           <button class="buttons quit-button" type="button">Quit</button>
-          <button class="buttons log-button" type="button">Log</button>
-          <button class="buttons solve-button" type="button">Solvel</button>
-          <!-- </div> -->
+          <button class="buttons log-button" type="button" data-showorhide="1">
+            Log
+          </button>
+          <button class="buttons solve-button" type="button">Solve!</button>
+          <select id="solve-speed">
+            <option value="0">Solve quickly</option>
+            <option value="1" selected>Solve normally</option>
+            <option value="2">Solve slowly</option>
+          </select>
         </div>
         <div class="info">
           <div class="info-time">Time: <span class="time"></span></div>
@@ -68,12 +62,14 @@
             Minimum Moves: <span class="minimum-moves"></span>
           </div>
         </div>
+        <div class="result"></div>
         <div class="hanio">
           <div class="tower source" id="0" name="Source">
             <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
           <div class="tower aux" id="1" name="Aux">
+            <div class="vertical-bar"></div>
             <div class="horizontal-bar"></div>
           </div>
           <div class="tower target" id="2" name="Target">

@@ -36,11 +36,12 @@ const smallestDiskWidthPercent = 25;
 const diskWidthDiffPercent = 5;
 
 const diskNumberSetting = document.querySelector("#disknumbers");
+const solveSpeedEle = document.querySelector("#solve-speed");
 const sourceTower = document.querySelector(".source");
 const timeEle = document.querySelector(".time");
 const movesEle = document.querySelector(".moves");
 const minimumMovesEle = document.querySelector(".minimum-moves");
-
+const resultEle = document.querySelector(".result");
 const towerDivs = document.querySelectorAll(".tower");
 const moveButtons = document.querySelectorAll(".move-button");
 const startButton = document.querySelector(".start-button");
@@ -50,10 +51,12 @@ const solveButton = document.querySelector(".solve-button");
 const logs = document.querySelector(".logs");
 const logsContent = document.querySelector(".logs-content");
 const logsHideButton = document.querySelector(".logs-hide-button");
+const solveSpeeds = [500, 1000, 1500];
 let logsInfos = [];
-
-let diskNumber = 3;
+let autoMoveSteps = [];
+let timeouts = [];
 let towerTopPercents = [];
+let diskNumber = 3;
 let moves = 0;
 let sourceTowerHight = $(sourceTower).height();
 let sourceTowerWidth = $(sourceTower).width();
@@ -62,7 +65,8 @@ let isAuto = false;
 let startTime = 0;
 let endTime = 0;
 let interval;
-let autoMoveInterval;
+let solveSpeedOption = 1;
+let solveTimeOut = solveSpeeds[solveSpeedOption];
 
 function settingDiskNumber(e) {
   let newDiskNumber = parseInt(this.value);
@@ -119,7 +123,6 @@ function settingDiskNumber(e) {
 }
 
 function moveDisk(disk, oriTowerId, aimTowerId) {
-  // alert("begin move");
   let oriTower = towers[oriTowerId];
   let aimTower = towers[aimTowerId];
 
@@ -134,13 +137,7 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
     towerTopPercents[aimTowerId] - eachDiskHeightPercent;
   let newTop = (towerTopPercents[aimTowerId] / 100) * sourceTowerHight;
   disk.style.top = newTop + "px";
-  // if (isAuto) {
-  //   setTimeout(function() {
-  //     aimTower.appendChild(disk);
-  //   }, 20000);
-  // } else {
   aimTower.appendChild(disk);
-  // }
 
   oriTowerDisks.shift();
   towerDiskIds[oriTowerId].shift();
@@ -148,6 +145,7 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
   towerDiskIds[aimTowerId].splice(0, 0, oriDiskId);
   moves++;
   movesEle.innerText = moves;
+  // alert("1");
   let logInfo =
     "Disk " +
     disk.id +
@@ -158,22 +156,8 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
   logsInfos.push(logInfo);
   console.log(logInfo);
   if (towerDisks[2].length == diskNumber) {
-    isFinish = true;
     finishGame();
-    logInfo =
-      "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
-    logsInfos.push(logInfo);
-    console.log(logInfo);
-    setTimeout(function() {
-      alert("Good job! You did it!");
-    }, 300);
   }
-  // if (isAuto) {
-  //   console.log("begin sleep:" + new Date().getTime());
-  //   sleep(5000);
-  //   console.log("begin end:" + new Date().getTime());
-  // }
-  // console.log("begin move" + new Date().getTime());
 }
 
 function moveDishHandle() {
@@ -192,14 +176,20 @@ function moveDishHandle() {
         if (oriDiskId < aimTowerTopDiskId) {
           moveDisk(oriDisk, oriTowerId, aimTowerId);
         } else {
+          let oriTower = towers[oriTowerId];
+          let aimTower = towers[aimTowerId];
           alert(
-            "Can't move! Original disk is bigger than top disk on aim tower!"
+            "Can't move! the top disk on " +
+              oriTower.getAttribute("name") +
+              " tower is bigger than top disk on " +
+              aimTower.getAttribute("name") +
+              " tower!"
           );
         }
       }
     }
   } else {
-    alert("There is no disk to move");
+    alert("There is no disk to move!");
   }
 }
 
@@ -227,13 +217,16 @@ function quitGame() {
   this.innerText = "Quit";
   this.disabled = true;
   solveButton.disabled = false;
+  solveSpeedEle.disabled = false;
 
-  moves = 0;
-  // movesEle.innerText = "";
-  resetTowerDisks();
   clearInterval(interval);
+  resetTowerDisks();
+
   if (isAuto) {
-    clearInterval(autoMoveInterval);
+    for (let i = 0; i < timeouts.length; i++) {
+      clearTimeout(timeouts[i]);
+    }
+    timeouts = [];
   }
   if (!isFinish) {
     logInfo =
@@ -244,6 +237,7 @@ function quitGame() {
     logsInfos.push(logInfo);
     console.log(logInfo);
   }
+  moves = 0;
 }
 
 function resetTowerDisks() {
@@ -299,103 +293,74 @@ function resetTowerDisks() {
   }
 }
 
-function sleep(delay) {
-  var start = new Date().getTime();
-  while (new Date().getTime() - start < delay) {
-    continue;
-  }
-}
-
 function solveGame() {
+  autoMoveSteps = [];
   isFinish = false;
   isAuto = true;
+  logsInfos = [];
   moveButtons.forEach(button => (button.disabled = false));
   diskNumberSetting.disabled = true;
+  solveSpeedEle.disabled = true;
   quitButton.disabled = false;
   this.disabled = true;
   timeEle.innerText = "";
+  moves = 0;
+  clearInterval(interval);
+  resetTowerDisks();
+
+  solveSpeedOption = parseInt(solveSpeedEle.value);
+  solveTimeOut = solveSpeeds[solveSpeedOption];
   let logInfo = "Start the Game.";
   logsInfos.push(logInfo);
   console.log(logInfo);
   startTime = new Date().getTime();
   interval = setInterval(showRunTime, 1000);
-  autoMoveHandle(diskNumber, 0, 2);
-  // autoMoveInterval = setInterval(autoMoveHandle, 1000);
-}
-
-function autoMoveHandle(diskId, soureTowerId, targetTowerId) {
-  // setTimeout(function() {}, 1000);
-  // console.log(
-  //   "diskId:" +
-  //     diskId +
-  //     " ; soureTowerId:" +
-  //     soureTowerId +
-  //     " ;targetTowerId:" +
-  //     targetTowerId
-  // );
-  let sourceTowerDiskIds = towerDiskIds[soureTowerId];
-  let diskIndex = sourceTowerDiskIds.indexOf(diskId);
-  console.log(diskIndex);
-  if (diskIndex != 0) {
-    let auxTowerId = getArrDifference(
-      [0, 1, 2],
-      [soureTowerId, targetTowerId]
-    )[0];
-    let nextDiskId = sourceTowerDiskIds[diskIndex - 1];
-    // setTimeout(function() {
-    autoMoveHandle(nextDiskId, soureTowerId, auxTowerId);
-    //move()
-    autoMoveHandle(diskId, soureTowerId, targetTowerId);
-    autoMoveHandle(nextDiskId, auxTowerId, targetTowerId);
-    // }, 1000);
-  } else {
-    let targetTowerDiskIds = towerDiskIds[targetTowerId];
-    if (targetTowerDiskIds.length > 0) {
-      let targetTowerTopDiskId = targetTowerDiskIds[0];
-      if (diskId > targetTowerTopDiskId) {
-        let auxTowerId = getArrDifference(
-          [0, 1, 2],
-          [soureTowerId, targetTowerId]
-        )[0];
-        // setTimeout(function() {
-        autoMoveHandle(targetTowerTopDiskId, targetTowerId, auxTowerId);
-        //move()
-        autoMoveHandle(diskId, soureTowerId, targetTowerId);
-        autoMoveHandle(targetTowerTopDiskId, auxTowerId, targetTowerId);
-        // }, 1000);
-      } else {
-        //move()
-        let oriDisk = towerDisks[soureTowerId][0];
-        // setTimeout(function() {
-        moveDisk(oriDisk, soureTowerId, targetTowerId);
-        // }, 1000);
-      }
-    } else {
-      // move()
-      let oriDisk = towerDisks[soureTowerId][0];
-      // setTimeout(function() {
-      moveDisk(oriDisk, soureTowerId, targetTowerId);
-      // }, 1000);
+  // autoMoveHandle(diskNumber, 0, 2);
+  hanoi(diskNumber, 0, 1, 2);
+  if (autoMoveSteps.length > 0) {
+    for (let i = 0; i < autoMoveSteps.length; i++) {
+      timeouts.push(
+        setTimeout(function() {
+          let step = autoMoveSteps[i];
+          let diskId = step[0];
+          let soureTowerId = step[1];
+          let targetTowerId = step[2];
+          let oriDisk = towerDisks[soureTowerId][0];
+          moveDisk(oriDisk, soureTowerId, targetTowerId);
+        }, (i + 1) * solveTimeOut)
+      );
     }
   }
 }
 
-function getArrDifference(arr1, arr2) {
-  return arr1.concat(arr2).filter(function(v, i, arr) {
-    return arr.indexOf(v) === arr.lastIndexOf(v);
-  });
+function hanoi(disc, src, aux, dst) {
+  if (disc > 0) {
+    hanoi(disc - 1, src, dst, aux);
+    autoMoveSteps.push([disc, src, dst]);
+    hanoi(disc - 1, aux, src, dst);
+  }
 }
 
 function finishGame() {
+  isFinish = true;
   moveButtons.forEach(button => (button.disabled = true));
   diskNumberSetting.disabled = true;
   startButton.disabled = true;
   quitButton.innerText = "Restart";
   quitButton.disabled = false;
+  solveSpeedEle.disabled = false;
   clearInterval(interval);
   if (isAuto) {
-    clearInterval(autoMoveInterval);
+    timeouts = [];
   }
+  let logInfo =
+    "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
+  logsInfos.push(logInfo);
+  console.log(logInfo);
+  resultEle.innerText = "Well Done!";
+  setTimeout(function() {
+    resultEle.innerText = "";
+  }, 1500);
 }
 
 function showRunTime() {
@@ -420,24 +385,36 @@ function convertToShowTime(timeInterval) {
   if (H > 0) showTime += H + (H > 1 ? " hours " : " hour ");
   if (M > 0) showTime += M + (M > 1 ? " minutes " : " minute ");
   if (S > 0) showTime += S + (S > 1 ? " seconds " : " second ");
-  // console.log(showTime);
   return showTime;
 }
 
-function showLogs() {
-  $(logs).effect("slide", {}, 500, function() {});
-  $(logsContent).empty();
-  if (logsInfos.length > 0) {
-    for (let i = 0; i < logsInfos.length; i++) {
-      let p = document.createElement("p");
-      p.innerText = logsInfos[i];
-      logsContent.appendChild(p);
+function showLogs(e) {
+  let showorhide = e.target.dataset.showorhide;
+  showorhide = showorhide == "" ? 0 : parseInt(showorhide);
+  if (showorhide == 1) {
+    $(logs).effect("slide", {}, 500, function() {});
+    $(logsContent).empty();
+    if (logsInfos.length > 0) {
+      for (let i = 0; i < logsInfos.length; i++) {
+        let p = document.createElement("p");
+        p.innerText = logsInfos[i];
+        logsContent.appendChild(p);
+      }
     }
+    e.target.dataset.showorhide = 0;
+  } else {
+    $(logs).effect("drop", {}, 500);
+    e.target.dataset.showorhide = 1;
   }
 }
 
 function hideLogs() {
   $(logs).effect("drop", {}, 500);
+  logButton.dataset.showorhide = 1;
+}
+
+function showSolveSpeed() {
+  $(".solve-speed-option").slideToggle("slow");
 }
 
 function init() {
