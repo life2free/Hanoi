@@ -459,6 +459,11 @@ function hideLogs() {
   logButton.dataset.showorhide = 1;
 }
 
+function showInstruction() {
+  // $(".instruction-detail").effect("slide", {}, 500, function() {});
+  $(".instruction-detail").slideToggle("slow");
+}
+
 function showSolveSpeed() {
   $(".solve-speed-option").slideToggle("slow");
 }
@@ -510,6 +515,9 @@ function init() {
   moveButtons.forEach(button => (button.disabled = true));
   logButton.addEventListener("click", showLogs);
   logsHideButton.addEventListener("click", hideLogs);
+  document
+    .querySelector(".instruction")
+    .addEventListener("click", showInstruction);
   quitButton.disabled = true;
   logs.style.display = "none";
 }
