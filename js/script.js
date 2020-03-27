@@ -39,6 +39,7 @@ const diskNumberSetting = document.querySelector("#disknumbers");
 const solveSpeedEle = document.querySelector("#solve-speed");
 const sourceTower = document.querySelector(".source");
 const timeEle = document.querySelector(".time");
+const scoreEle = document.querySelector(".score");
 const movesEle = document.querySelector(".moves");
 const minimumMovesEle = document.querySelector(".minimum-moves");
 const resultEle = document.querySelector(".result");
@@ -52,6 +53,11 @@ const logs = document.querySelector(".logs");
 const logsContent = document.querySelector(".logs-content");
 const logsHideButton = document.querySelector(".logs-hide-button");
 const solveSpeeds = [500, 1000, 1500];
+const baseWeights = [35, 40, 45, 50, 55, 60, 65];
+const timeWights = [40, 35, 30, 30, 25, 25, 20];
+const stepWights = [25, 25, 25, 20, 20, 15, 15];
+const baseTimeEachSteps = [1, 1, 1, 1.5, 1.5, 2, 2];
+const totalScores = [300, 400, 500, 600, 700, 800, 900];
 let logsInfos = [];
 let autoMoveSteps = [];
 let timeouts = [];
@@ -63,10 +69,11 @@ let sourceTowerWidth = $(sourceTower).width();
 let isFinish = false;
 let isAuto = false;
 let startTime = 0;
-let endTime = 0;
+let spendTime = 0;
 let interval;
 let solveSpeedOption = 1;
 let solveTimeOut = solveSpeeds[solveSpeedOption];
+let finalScore = 0;
 
 function settingDiskNumber(e) {
   let newDiskNumber = parseInt(this.value);
@@ -202,12 +209,63 @@ function startGame() {
   quitButton.disabled = false;
   this.disabled = true;
   timeEle.innerText = "";
+  scoreEle.innerText = "";
+  finalScore = 0;
   movesEle.innerText = "";
   startTime = new Date().getTime();
   interval = setInterval(showRunTime, 1000);
   let logInfo = "Start the Game.";
   logsInfos.push(logInfo);
   console.log(logInfo);
+}
+
+function solveGame() {
+  autoMoveSteps = [];
+  isFinish = false;
+  isAuto = true;
+  logsInfos = [];
+  moveButtons.forEach(button => (button.disabled = false));
+  diskNumberSetting.disabled = true;
+  solveSpeedEle.disabled = true;
+  quitButton.disabled = false;
+  this.disabled = true;
+  timeEle.innerText = "";
+  scoreEle.innerText = "";
+
+  moves = 0;
+  clearInterval(interval);
+  resetTowerDisks();
+
+  solveSpeedOption = parseInt(solveSpeedEle.value);
+  solveTimeOut = solveSpeeds[solveSpeedOption];
+  let logInfo = "Start the Game.";
+  logsInfos.push(logInfo);
+  console.log(logInfo);
+  startTime = new Date().getTime();
+  interval = setInterval(showRunTime, 1000);
+  hanoi(diskNumber, 0, 1, 2);
+  if (autoMoveSteps.length > 0) {
+    for (let i = 0; i < autoMoveSteps.length; i++) {
+      timeouts.push(
+        setTimeout(function() {
+          let step = autoMoveSteps[i];
+          let diskId = step[0];
+          let soureTowerId = step[1];
+          let targetTowerId = step[2];
+          let oriDisk = towerDisks[soureTowerId][0];
+          moveDisk(oriDisk, soureTowerId, targetTowerId);
+        }, (i + 1) * solveTimeOut)
+      );
+    }
+  }
+}
+
+function hanoi(disc, src, aux, dst) {
+  if (disc > 0) {
+    hanoi(disc - 1, src, dst, aux);
+    autoMoveSteps.push([disc, src, dst]);
+    hanoi(disc - 1, aux, src, dst);
+  }
 }
 
 function quitGame() {
@@ -229,6 +287,10 @@ function quitGame() {
     timeouts = [];
   }
   if (!isFinish) {
+    if (!isAuto) {
+      scoreEle.innerText = "0";
+      finalScore = 0;
+    }
     logInfo =
       "Quit the Game! total steps:" +
       moves +
@@ -238,6 +300,32 @@ function quitGame() {
     console.log(logInfo);
   }
   moves = 0;
+}
+
+function finishGame() {
+  isFinish = true;
+  moveButtons.forEach(button => (button.disabled = true));
+  diskNumberSetting.disabled = true;
+  startButton.disabled = true;
+  quitButton.innerText = "Restart";
+  quitButton.disabled = false;
+  solveSpeedEle.disabled = false;
+  clearInterval(interval);
+  let logInfo =
+    "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
+  if (isAuto) {
+    timeouts = [];
+  } else {
+    calculateScore(moves);
+    logInfo += ". Score:" + finalScore;
+  }
+
+  logsInfos.push(logInfo);
+  console.log(logInfo);
+  resultEle.innerText = "Well Done!";
+  setTimeout(function() {
+    resultEle.innerText = "";
+  }, 1500);
 }
 
 function resetTowerDisks() {
@@ -293,80 +381,38 @@ function resetTowerDisks() {
   }
 }
 
-function solveGame() {
-  autoMoveSteps = [];
-  isFinish = false;
-  isAuto = true;
-  logsInfos = [];
-  moveButtons.forEach(button => (button.disabled = false));
-  diskNumberSetting.disabled = true;
-  solveSpeedEle.disabled = true;
-  quitButton.disabled = false;
-  this.disabled = true;
-  timeEle.innerText = "";
-  moves = 0;
-  clearInterval(interval);
-  resetTowerDisks();
-
-  solveSpeedOption = parseInt(solveSpeedEle.value);
-  solveTimeOut = solveSpeeds[solveSpeedOption];
-  let logInfo = "Start the Game.";
-  logsInfos.push(logInfo);
-  console.log(logInfo);
-  startTime = new Date().getTime();
-  interval = setInterval(showRunTime, 1000);
-  // autoMoveHandle(diskNumber, 0, 2);
-  hanoi(diskNumber, 0, 1, 2);
-  if (autoMoveSteps.length > 0) {
-    for (let i = 0; i < autoMoveSteps.length; i++) {
-      timeouts.push(
-        setTimeout(function() {
-          let step = autoMoveSteps[i];
-          let diskId = step[0];
-          let soureTowerId = step[1];
-          let targetTowerId = step[2];
-          let oriDisk = towerDisks[soureTowerId][0];
-          moveDisk(oriDisk, soureTowerId, targetTowerId);
-        }, (i + 1) * solveTimeOut)
-      );
-    }
+function calculateScore(stepNumber) {
+  console.log("score");
+  let baseWeight = baseWeights[diskNumber - minDiskNumber];
+  let timeWight = timeWights[diskNumber - minDiskNumber];
+  let stepWight = stepWights[diskNumber - minDiskNumber];
+  let baseTimeEachStep = baseTimeEachSteps[diskNumber - minDiskNumber];
+  let totalScore = totalScores[diskNumber - minDiskNumber];
+  finalScore = (totalScore * baseWeight) / 100;
+  let timeEachStep = spendTime / stepNumber;
+  let timeRatio = timeEachStep / baseTimeEachStep - 1;
+  if (timeRatio > 0) {
+    let timeScore =
+      (totalScore * timeWight * Math.pow(0.8, Math.round(timeRatio / 0.5))) /
+      100;
+    finalScore += timeScore;
+  } else {
+    finalScore += (totalScore * timeWight) / 100;
   }
-}
 
-function hanoi(disc, src, aux, dst) {
-  if (disc > 0) {
-    hanoi(disc - 1, src, dst, aux);
-    autoMoveSteps.push([disc, src, dst]);
-    hanoi(disc - 1, aux, src, dst);
-  }
-}
-
-function finishGame() {
-  isFinish = true;
-  moveButtons.forEach(button => (button.disabled = true));
-  diskNumberSetting.disabled = true;
-  startButton.disabled = true;
-  quitButton.innerText = "Restart";
-  quitButton.disabled = false;
-  solveSpeedEle.disabled = false;
-  clearInterval(interval);
-  if (isAuto) {
-    timeouts = [];
-  }
-  let logInfo =
-    "Success! total steps:" + moves + ".  total times:" + timeEle.innerText;
-  logsInfos.push(logInfo);
-  console.log(logInfo);
-  resultEle.innerText = "Well Done!";
-  setTimeout(function() {
-    resultEle.innerText = "";
-  }, 1500);
+  let mininumStep = Math.pow(2, diskNumber) - 1;
+  let stepRatio = stepNumber / mininumStep - 1;
+  let stepScore =
+    (totalScore * stepWight * Math.pow(0.8, Math.round(stepRatio / 0.5))) / 100;
+  finalScore += stepScore;
+  finalScore = Math.round(finalScore);
+  scoreEle.innerText = finalScore;
 }
 
 function showRunTime() {
   let now = new Date().getTime();
   let runTime = now - startTime;
-
+  spendTime = runTime / 1000;
   timeEle.innerText = convertToShowTime(runTime);
 }
 
