@@ -453,6 +453,11 @@ function resetTowerDisks() {
             100) *
           sourceTowerWidth;
         disk.style.width = newWidth + "px";
+        // $(disk).width(
+        //   smallestDiskWidthPercent +
+        //     diskWidthDiffPercent * (parseInt(i) - 1) +
+        //     "%"
+        // );
         // calculate the top of disk
         let topPercent =
           100 -

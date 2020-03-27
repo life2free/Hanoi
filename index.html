@@ -8,28 +8,23 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./css/mediaqueries.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script
       src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
       integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
       crossorigin="anonymous"
     ></script>
-    <!-- <link
-      rel="stylesheet"
-      href="https://apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css"
-    />
-    <script src="https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script src="https://apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
-    <title>Hanio</title>
+    <title>Tower of Hanoi</title>
   </head>
   <body>
-    <div class="title">Welcome to Tower of Hanoi</div>
+    <div class="font-30 title">Welcome to Tower of Hanoi</div>
     <div class="profile">
-      <div class="intro">
+      <div class="font-18 intro">
         Object of the game is to move all the disks over to Tower target.
         <br />But you cannot place a larger disk onto a smaller disk.<br />
         <span class="instruction">Instructions</span>
-        <div class="instruction-detail">
+        <div class="font-14 instruction-detail">
           <div class="instruction-detail-info">
             Move disk: move the disks simply use the arrow buttons under the
             towers
@@ -55,7 +50,7 @@
     <div class="main">
       <div class="content">
         <div class="actoins">
-          <div class="disknumber">
+          <div class="font-16 disknumber">
             Disk:
             <select id="disknumbers">
               <option value="3" selected>3</option>
@@ -67,27 +62,37 @@
               <option value="9">9</option>
             </select>
           </div>
-          <button class="buttons start-button" type="button">Start</button>
-          <button class="buttons quit-button" type="button">Quit</button>
-          <button class="buttons log-button" type="button" data-showorhide="1">
+          <button class="font-14 buttons start-button" type="button">
+            Start
+          </button>
+          <button class="font-14 buttons quit-button" type="button">
+            Quit
+          </button>
+          <button
+            class="font-14 buttons log-button"
+            type="button"
+            data-showorhide="1"
+          >
             Log
           </button>
-          <button class="buttons solve-button" type="button">Solve!</button>
+          <button class="font-14 buttons solve-button" type="button">
+            Solve!
+          </button>
           <select id="solve-speed">
             <option value="0">Solve quickly</option>
             <option value="1" selected>Solve normally</option>
             <option value="2">Solve slowly</option>
           </select>
         </div>
-        <div class="info">
+        <div class="font-16 info">
           <div class="info-time">Time:&nbsp;<span class="time"></span></div>
           <div class="info-score">Score:&nbsp;<span class="score"></span></div>
           <div class="info-moves">Moves:&nbsp;<span class="moves"></span></div>
           <div class="info-minimum-moves">
-            Minimum Moves:&nbsp;<span class="minimum-moves"></span>
+            Min Moves:&nbsp;<span class="minimum-moves"></span>
           </div>
         </div>
-        <div class="result"></div>
+        <div class="font-30 result"></div>
         <div class="hanio">
           <div class="tower source" id="0" name="Source">
             <div class="vertical-bar"></div>
@@ -102,32 +107,62 @@
             <div class="horizontal-bar"></div>
           </div>
           <div class="source-move-buttons move-buttons">
-            <button class="move-button" type="button" oriId="0" aimId="1">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="0"
+              aimId="1"
+            >
               >
             </button>
-            <button class="move-button" type="button" oriId="0" aimId="2">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="0"
+              aimId="2"
+            >
               >>
             </button>
           </div>
           <div class="aux-move-buttons move-buttons">
-            <button class="move-button" type="button" oriId="1" aimId="0">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="1"
+              aimId="0"
+            >
               <
             </button>
-            <button class="move-button" type="button" oriId="1" aimId="2">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="1"
+              aimId="2"
+            >
               >
             </button>
           </div>
           <div class="target-move-buttons move-buttons">
-            <button class="move-button" type="button" oriId="2" aimId="0">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="2"
+              aimId="0"
+            >
               <<
             </button>
-            <button class="move-button" type="button" oriId="2" aimId="1">
+            <button
+              class="font-14 move-button"
+              type="button"
+              oriId="2"
+              aimId="1"
+            >
               <
             </button>
           </div>
         </div>
 
-        <div class="tower-name">
+        <div class="font-16 tower-name">
           <div>Source</div>
           <div>Aux</div>
           <div>Target</div>
@@ -137,7 +172,7 @@
     <div class="logs">
       <div class="logs-content"></div>
       <div class="logs-button">
-        <button class="logs-hide-button" type="button">hide</button>
+        <button class="font-14 logs-hide-button" type="button">hide</button>
       </div>
     </div>
     <script src="./js/script.js"></script>
