@@ -23,18 +23,33 @@
  8. When player moves all of disks on source tower to target tower, player finishs the game. 
 */
 
+/********* define the constants *******/
+// store the disks in each tower
 const towerDisks = [[], [], []];
+// store the id of disks in each tower
 const towerDiskIds = [[], [], []];
+/*
+store the standby disks. the max number of disks is 9. If the number the user choice is less than 9, 
+  then the rest of disks will be store in this array. e.g: if user choice 6 disks to play, 
+  then disk 7, 8, 9 will be store in this array in case the user will choice more disks to play in next round.
+*/
 const standbyDisks = [];
+// store the tower's div elements
 const towers = [{}, {}, {}];
-
+// the max number of disks which user can move
 const maxDiskNumber = 9;
+// the min number of disks which user can move
 const minDiskNumber = 3;
+// the the height percent of horizontal bar, for calculation the disk's top when move the disk
 const horizontalBarHeightPercent = 5;
+// the height percent of each disk
 const eachDiskHeightPercent = 10;
+// the width percent of smallest disk. In this game, the smallest disk is disk 3
 const smallestDiskWidthPercent = 25;
+// the differenct width percent of each disk
 const diskWidthDiffPercent = 5;
 
+// the html element
 const diskNumberSetting = document.querySelector("#disknumbers");
 const solveSpeedEle = document.querySelector("#solve-speed");
 const sourceTower = document.querySelector(".source");
@@ -53,7 +68,19 @@ const logs = document.querySelector(".logs");
 const logsContent = document.querySelector(".logs-content");
 const logsHideButton = document.querySelector(".logs-hide-button");
 const instruction = document.querySelector(".instruction");
+
+/*
+the timeout value for solve. its unit is millisecond. 
+  500:  stand for Solve quickly
+  1000: stand for Solve normally
+  1500: stand for Solve slowly
+*/
 const solveSpeeds = [500, 1000, 1500];
+
+/*
+percent value as base weight of final score which user will get. 
+  user will get whole score of this part if finished the game
+*/
 const baseWeights = [35, 40, 45, 50, 55, 60, 65];
 const timeWights = [40, 35, 30, 30, 25, 25, 20];
 const stepWights = [25, 25, 25, 20, 20, 15, 15];

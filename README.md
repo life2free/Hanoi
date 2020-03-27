@@ -38,28 +38,28 @@ There are two methods to move:
 
 ### Disk number
 
-Before playing, user can choice how many disk to play which the number range from 3 to 9.
+Before playing, user can choice how many disks to play which the number range from 3 to 9.
 
 ### Information
 
 The game provides additional informations on page for user.
 
-1. Instructions
+1. Instructions  
    It refers to the instructions of game. The Instructions will be show on the page after user clicking the "Instructions".
 
-2. Time
+2. Time  
    It refers to how long did the user play on current round.
 
-3. Moves
+3. Moves  
    It refers to how many steps the user moved on current round.
 
-4. Score
+4. Score  
    It refers to the score the user got after finish the game. User can get score only moving all the disks to target tower. The calculation formulas is simple, base on the time and steps user spent
 
-5. Minimum Moves
+5. Minimum Moves  
    It refers to the minimum moves of disks we can get the solution. The formula is (2^n - 1) where n is the number of the disks. If the n=3, then the minimum Moves is 7.
 
-6. Log
+6. Log  
    It refers to the detail information of each move step. The log will be show on the page after user clicking the "Log" button.
 
 ## Recursive Function
