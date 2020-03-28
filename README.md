@@ -23,7 +23,7 @@ HTML, CSS, and JavaScript (with some jQuery).
 There are two methods to move:
 
 1. Manual
-   User uses the arrow buttons under the towers to move the disks follows the game rules.
+   User can uses the mouse to move the disks, or uses the arrow buttons under the towers to move the disks.
 
    - ">" : Move the disk to the adjacent tower on right side
    - ">>" : Move the disk to farthest tower on right side
