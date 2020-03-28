@@ -22,7 +22,7 @@ HTML, CSS, and JavaScript (with some jQuery).
 
 There are two methods to move:
 
-1. Manual
+1. Manual  
    User can uses the mouse to move the disks, or uses the arrow buttons under the towers to move the disks.
 
    - ">" : Move the disk to the adjacent tower on right side
@@ -30,7 +30,7 @@ There are two methods to move:
    - "<": Move the disk to the adjacent tower on left side
    - "<<": Move the disk to farthest tower on left side
 
-2. Automatic
+2. Automatic  
    The game provide the solve for user. The game move disks step by step automatically to shows user how to move disks. There are there speed for solve.
    - Quickly: The game solves the game quickly
    - Normally: The game solves the puzzle at normal speed
