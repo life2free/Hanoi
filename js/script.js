@@ -116,7 +116,7 @@ let finalScore = 0;
  */
 function settingDiskNumber(e) {
   let newDiskNumber = parseInt(this.value);
-  if (newDiskNumber != diskNumber) {
+  if (newDiskNumber !== diskNumber) {
     // if user choice different number with last time, then the number of disks stack on the source tower will change
     if (newDiskNumber > diskNumber) {
       // if user choice more disks to move, need showing more disks on the source tower
@@ -131,7 +131,7 @@ function settingDiskNumber(e) {
       }
       for (let i = 0; i < newDiskNumber - diskNumber; i++) {
         let disk = standbyDisks.shift();
-        if (disk != null) {
+        if (disk !== null) {
           let topPercent =
             100 -
             horizontalBarHeightPercent -
@@ -229,7 +229,7 @@ function moveDisk(disk, oriTowerId, aimTowerId) {
     aimTower.getAttribute("name");
   logsInfos.push(logInfo);
   console.log(logInfo);
-  if (towerDisks[2].length == diskNumber) {
+  if (towerDisks[2].length === diskNumber) {
     finishGame();
   }
 }
@@ -252,12 +252,12 @@ function moveDishHandle() {
   if (oriTowerDisks.length > 0) {
     let oriDisk = oriTowerDisks[0];
     let oriDiskId = towerDiskIds[oriTowerId][0];
-    if (aimTowerDisks.length == 0) {
+    if (aimTowerDisks.length === 0) {
       // the aim tower is empty, move the disk to aim tower directly
       moveDisk(oriDisk, oriTowerId, aimTowerId);
     } else {
       let aimTowerTopDiskId = towerDiskIds[aimTowerId][0];
-      if (aimTowerTopDiskId != null && aimTowerTopDiskId != "") {
+      if (aimTowerTopDiskId !== null && aimTowerTopDiskId !== "") {
         if (oriDiskId < aimTowerTopDiskId) {
           // the top disk on aim tower is bigger, move the disk to aim tower directly
           moveDisk(oriDisk, oriTowerId, aimTowerId);
@@ -582,8 +582,8 @@ function convertToShowTime(timeInterval) {
  */
 function showLogs(e) {
   let showorhide = e.target.dataset.showorhide;
-  showorhide = showorhide == "" ? 0 : parseInt(showorhide);
-  if (showorhide == 1) {
+  showorhide = showorhide === "" ? 0 : parseInt(showorhide);
+  if (showorhide === 1) {
     $(logs).effect("slide", {}, 500, function() {});
     $(logsContent).empty();
     if (logsInfos.length > 0) {
@@ -635,17 +635,17 @@ function dropHandle(e) {
   e.preventDefault();
   let oriTowerId = parseInt(e.dataTransfer.getData("Text"));
   let aimTowerId = parseInt($(this).attr("id"));
-  if (oriTowerId != aimTowerId) {
+  if (oriTowerId !== aimTowerId) {
     let oriTowerDisks = towerDisks[oriTowerId];
     let aimTowerDisks = towerDisks[aimTowerId];
     let oriDisk = oriTowerDisks[0];
     let oriDiskId = towerDiskIds[oriTowerId][0];
-    if (aimTowerDisks.length == 0) {
+    if (aimTowerDisks.length === 0) {
       // the aim tower is empty, move the disk to aim tower directly
       moveDisk(oriDisk, oriTowerId, aimTowerId);
     } else {
       let aimTowerTopDiskId = towerDiskIds[aimTowerId][0];
-      if (aimTowerTopDiskId != null && aimTowerTopDiskId != "") {
+      if (aimTowerTopDiskId !== null && aimTowerTopDiskId !== "") {
         if (oriDiskId < aimTowerTopDiskId) {
           // the top disk on aim tower is bigger, move the disk to aim tower directly
           moveDisk(oriDisk, oriTowerId, aimTowerId);
