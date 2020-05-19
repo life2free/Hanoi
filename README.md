@@ -16,7 +16,7 @@ HTML, CSS, and JavaScript (with some jQuery).
 
 ## Feature
 
-![hanio](https://github.com/life2free/Hanoi/blob/master/img/hanio.jpg)
+![hanio](https://github.com/life2free/Hanoi/blob/master/img/hanoi.jpg)
 
 ### Moving method
 
