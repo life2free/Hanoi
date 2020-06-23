@@ -66,3 +66,8 @@ The game provides additional informations on page for user.
 
 A recursive function is a function which either calls itself or is in a potential cycle of function calls. The core idea of Tower of Hanoi is recursion.
 There is a recursive function which will be excuted when playing in automatic method.
+
+## Contribute
+
+- Source code: https://github.com/life2free/Hanoi
+- Issue Tracker: https://github.com/life2free/Hanoi/issues
